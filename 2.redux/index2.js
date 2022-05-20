@@ -1,4 +1,8 @@
-const { createStore, compose, applyMiddleware } = require('redux');
+const {
+  createStore,
+  compose,
+  applyMiddleware,
+} = require('../1.redux/node_modules/redux');
 const reducer = require('./reducers');
 const { logIn, logOut } = require('./actions/user');
 const { addPost } = require('./actions/post');
@@ -11,6 +15,14 @@ const initialState = {
   posts: [],
 };
 
+const thunkMiddleware = (store) => (dispatch) => (action) => {
+  if (typeof action === 'function') {
+    return action(store.dispatch, store.getState);
+    // 비동기
+  }
+  return dispatch(action);
+};
+
 const firstMiddleware = (store) => (dispatch) => (action) => {
   console.log('액션 로깅', action);
   // 기능추가
@@ -19,7 +31,7 @@ const firstMiddleware = (store) => (dispatch) => (action) => {
   console.log('액션 끝');
 };
 
-const enhancer = compose(applyMiddleware(firstMiddleware));
+const enhancer = compose(applyMiddleware(firstMiddleware, thunkMiddleware));
 
 const store = createStore(reducer, initialState, enhancer);
 store.subscribe(() => {
@@ -36,18 +48,18 @@ store.dispatch(
   })
 );
 
-console.log('2nd', store.getState());
+// console.log('2nd', store.getState());
 
-store.dispatch(
-  addPost({
-    userId: 1,
-    id: 1,
-    content: 'hi redux',
-  })
-);
+// store.dispatch(
+//   addPost({
+//     userId: 1,
+//     id: 1,
+//     content: 'hi redux',
+//   })
+// );
 
-console.log('3rd', store.getState());
+// console.log('3rd', store.getState());
 
-store.dispatch(logOut());
+// store.dispatch(logOut());
 
-console.log('4th', store.getState());
+// console.log('4th', store.getState());
