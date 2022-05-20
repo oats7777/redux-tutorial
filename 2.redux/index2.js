@@ -1,8 +1,4 @@
-const {
-  createStore,
-  compose,
-  applyMiddleware,
-} = require('../1.redux/node_modules/redux');
+const { createStore, compose, applyMiddleware } = require('redux');
 const reducer = require('./reducers');
 const { logIn, logOut } = require('./actions/user');
 const { addPost } = require('./actions/post');
